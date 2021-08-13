@@ -7,6 +7,8 @@ from utils import  (ElementsEnv,Actions,Rewards, str_dict,
                           display_dict, MIN_SIZE_ENVIR, MAX_WOOD_LOGS, BLACK,
                           WHITE)
 
+from agent import Agent
+
 
 Exit = namedtuple('Exit', ['coordinates', 'surrounding_1', 'surrounding_2'])
 
@@ -20,9 +22,7 @@ class JungleBase(ABC,gym.Env):
         self.grid_env = np.ones((self.size, self.size), dtype=int)
         self.grid_env *= ElementsEnv.EMPTY.value
 
-        # Placeholders for agents
-        self.agents: List[Agent] = []
-
+    
         # Set starting_positions
         pos_1 = int((self.size - 1) / 2), int((self.size - 1) / 2 - 1)
         angle_1 = 3
@@ -63,6 +63,18 @@ class JungleBase(ABC,gym.Env):
                     * env_config.get(["n_agents"])
 
     
+    
+    def add_agents(self, random_position=True):
+
+        #self.agents = [agent_1, agent_2]
+
+        self._place_agents(random_position)
+        self._assign_colors()
+
+        for agent in self.agents:
+            agent.reset()
+
+
     def step(self,actions):
         if 'black' not in actions:
             actions_black = [0, 0, 0]

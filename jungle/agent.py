@@ -14,7 +14,7 @@ arrows_black = {0: 11157, 1: 11016, 2: 11017, 3: 11013, 4: 11019, 5: 11018}
 
 class Agent:
 
-    def __init__(self, range_observation=2):
+    def __init__(self,index, range_observation=2):
 
 
         self._color = None

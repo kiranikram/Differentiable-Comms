@@ -1,18 +1,31 @@
+import sys, os 
+sys.path.append(".")
+sys.path.append("..")
+from typing import Tuple, Union, List
+
+from abc import ABC, abstractmethod
+from copy import deepcopy
+import random
+import math
+
+from collections import namedtuple
+
+
 import numpy as np
 import gym
 from gym import spaces
 from gym.utils import seeding, EzPickle
 
-from utils import  (ElementsEnv,Actions,Rewards, str_dict,
+from jungle.utils import  (ElementsEnv,Actions,Rewards, str_dict,
                           display_dict, MIN_SIZE_ENVIR, MAX_WOOD_LOGS, BLACK,
                           WHITE)
 
-from agent import Agent
+from jungle.agent import Agent
 
 
 Exit = namedtuple('Exit', ['coordinates', 'surrounding_1', 'surrounding_2'])
 
-class JungleBase(ABC,gym.Env):
+class JungleBase(ABC):
     def __init__(self, env_config):
         EzPickle.__init__(self)
         self.seed(1)
@@ -45,7 +58,10 @@ class JungleBase(ABC,gym.Env):
         # Save the initial grid to reset to original state
         self._initial_grid = deepcopy(self.grid_env)
 
-        self.agents = [Agent(i,range_observation = 4)  for i in range(env_config.get('num_agents'))]
+        self.agents = [Agent(i,range_observation = 4)  for i in range(env_config.get('n_agents'))]
+
+        self._place_agents(random_position=True)
+        self._assign_colors()
         #these are only instantiated because  we have a funky way of referncing actions - can we get rid of that altogether - lmaybe not now 
         self.white = "white"
         self.black = "black"
@@ -60,7 +76,7 @@ class JungleBase(ABC,gym.Env):
                             shape=(258,),
                         ),
                     )
-                    * env_config.get(["n_agents"])
+                    * env_config.get("n_agents"))
 
     
     
@@ -475,7 +491,7 @@ class JungleBase(ABC,gym.Env):
 
         return obs
 
-   def apply_rules(self, agent):
+    def apply_rules(self, agent):
 
         rew = 0
 
@@ -636,7 +652,7 @@ class JungleBase(ABC,gym.Env):
 
         return row_new, col_new
 
-   @staticmethod
+    @staticmethod
     def _filter_observations(obs):
         " Replace all occlusions with -1 "
 
@@ -671,7 +687,7 @@ class JungleBase(ABC,gym.Env):
 
         return obs
 
- @staticmethod
+    @staticmethod
     def _filter_observations(obs):
         " Replace all occlusions with -1 "
 

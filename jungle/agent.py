@@ -1,4 +1,4 @@
-from utils import MAX_WOOD_LOGS, Actions, BLACK, WHITE
+from jungle.utils import MAX_WOOD_LOGS, Actions, BLACK, WHITE
 import random
 
 """For Rotation angles reference:

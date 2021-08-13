@@ -1,11 +1,14 @@
-from jungle_env import JungleBase
-from utils import ElementsEnv
+import sys, os 
+sys.path.append(".")
+sys.path.append("..")
+from jungle.jungle_env import JungleBase
+from jungle.utils import ElementsEnv
 from copy import deepcopy
+import gym
 
-class EasyExit(JungleBase):
+class EasyExit(JungleBase, gym.Env):
 
-    def __init__(self):
-        self.add_agents()
+    
 
     def _set_exits(self):
         self.exit_1 = self.select_random_exit()

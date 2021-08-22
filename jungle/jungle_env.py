@@ -65,7 +65,8 @@ class JungleBase(ABC):
         #these are only instantiated because  we have a funky way of referncing actions - can we get rid of that altogether - lmaybe not now 
         self.white = "white"
         self.black = "black"
-        self.action_space = spaces.MultiDiscrete([2, 3, 2])
+        #self.action_space = spaces.MultiDiscrete([2, 3, 2]) #original
+        self.action_space = spaces.MultiDiscrete([2, 3, 1]) #just testing!!!
         
         # this is going to be a shared obs space
         self.observation_space = spaces.Tuple(
@@ -91,6 +92,35 @@ class JungleBase(ABC):
             agent.reset()
 
 
+    def non_homogenous_step(self,actions):
+        if 'black' not in actions:
+            actions_black = [0, 0, 0]
+        else:
+            actions_black = actions[self.black]
+
+        if 'white' not in actions:
+            actions_white = [0, 0, 0]
+        else:
+            actions_white = actions[self.white]
+
+        black_fwd = actions_black[0]
+        black_rot = actions_black[1] - 1
+        black_climb = actions_black[2]
+
+        black_dict = {Actions.FORWARD: black_fwd, Actions.ROTATE: black_rot, Actions.CLIMB: black_climb}
+
+        white_fwd = actions_white[0]
+        white_rot = actions_white[1] - 1
+        white_climb = actions_white[2]
+
+        white_dict = {Actions.FORWARD: white_fwd, Actions.ROTATE: white_rot, Actions.CLIMB: white_climb}
+
+        actions_dict = {self.white: white_dict,
+                        self.black: black_dict}
+
+        obs, rewards, done = self.step_in_jungle(actions_dict)
+
+    #amending for homogenous action dist 
     def step(self,actions):
         if 'black' not in actions:
             actions_black = [0, 0, 0]
@@ -119,7 +149,6 @@ class JungleBase(ABC):
 
         obs, rewards, done = self.step_in_jungle(actions_dict)
 
-    
     def step_in_jungle(self, actions):
 
         # First Physical move

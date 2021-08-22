@@ -12,6 +12,7 @@ from ray.tune.logger import pretty_print, DEFAULT_LOGGERS, TBXLogger
 
 from jungle.demo_env import DemoMultiAgentEnv
 from networks.model import Model
+from networks.blumen_model import BlumenModel
 from ray.rllib.models import ModelCatalog
 from networks.multi_trainer import MultiPPOTrainer
 from networks.multi_action_dist import TorchHomogeneousMultiActionDistribution
@@ -21,7 +22,7 @@ def train(share_observations=True, action_space="discrete", goal_shift=1):
     ray.init()
 
     register_env("demo_env", lambda config: DemoMultiAgentEnv(config))
-    ModelCatalog.register_custom_model("model", Model)
+    ModelCatalog.register_custom_model("model", BlumenModel)
     ModelCatalog.register_custom_action_dist(
         "hom_multi_action", TorchHomogeneousMultiActionDistribution
     )

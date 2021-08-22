@@ -66,3 +66,6 @@ class Actions(IntEnum):
     ROTATE = auto()
     FORWARD = auto()
     CLIMB = auto()
+
+action_conversion_dict = {0:[0,0,0],
+                        1:[]}

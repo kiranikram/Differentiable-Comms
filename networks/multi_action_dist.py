@@ -21,11 +21,17 @@ class TorchHomogeneousMultiActionDistribution(TorchMultiActionDistribution):
         for i, (d, action_space) in enumerate(
             zip(self.flat_child_distributions, self.action_space_struct)
         ):
+            print('d')
+            print(d)
             if isinstance(action_space, gym.spaces.box.Box):
                 assert len(action_space.shape) == 1
                 a_w = action_space.shape[0]
                 x_sel = x[:, a_w * i : a_w * (i + 1)]
             elif isinstance(action_space, gym.spaces.discrete.Discrete):
+                print('action space')
+                print(action_space)
+                print('x')
+                print(x)
                 x_sel = x[:, i]
             else:
                 raise InvalidActionSpace(

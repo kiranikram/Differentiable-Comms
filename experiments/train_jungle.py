@@ -85,15 +85,15 @@ if __name__ == "__main__":
         description="RLLib multi-agent with shared NN demo."
     )
    
-    parser.add_argument(
-        "--disable_sharing",
-        action="store_true",
-        help="Do not instantiate shared central NN for sharing information",
-    )
+    #parser.add_argument(
+        #"--disable_sharing",
+        #action="store_true",
+        #help="Do not instantiate shared central NN for sharing information",
+    #)
 
 
     args = parser.parse_args()
     train(
-        share_observations=not args.disable_sharing
+        share_observations=True
         
     )

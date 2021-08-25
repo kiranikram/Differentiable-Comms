@@ -195,7 +195,7 @@ class Model(TorchModelV2, nn.Module):
                 batch_size, self.n_agents * self.encoder_out_features
             )
         ).view(batch_size, self.n_agents, self.shared_nn_out_features_per_agent)  
-        print('WE  GOT TO HERE')
+        #print('WE  GOT TO HERE')
        
         
         outputs = torch.empty(batch_size, self.n_agents, self.outputs_per_agent).to(
@@ -212,9 +212,9 @@ class Model(TorchModelV2, nn.Module):
 
         self._cur_value = values
 
-        print('WE THEN GOT TO HERE')
-        print(outputs.shape)
-        print(values.shape)
+        #print('WE THEN GOT TO HERE')
+        #print(outputs.shape)
+        #print(values.shape)
         return outputs.view(batch_size, self.n_agents * self.outputs_per_agent), state
 
     @override(ModelV2)

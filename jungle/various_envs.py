@@ -19,6 +19,7 @@ class EasyExit(JungleBase, gym.Env):
         pass
 
     def reset(self):
+        print("well we get  here ")
         self.grid_env[:] = deepcopy(self._initial_grid)
 
         self._place_agents()
@@ -30,6 +31,8 @@ class EasyExit(JungleBase, gym.Env):
 
         obs = {self.agents[0]: self.generate_agent_obs(self.agents[0]),
                self.agents[1]: self.generate_agent_obs(self.agents[1])}
+
+        obs = self.postprocess_obs_data(obs)
 
         return obs
 

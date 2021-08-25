@@ -18,7 +18,7 @@ from gym.utils import seeding, EzPickle
 
 from jungle.utils import  (ElementsEnv,Actions,Rewards, str_dict,
                           display_dict, MIN_SIZE_ENVIR, MAX_WOOD_LOGS, BLACK,
-                          WHITE)
+                          WHITE, action_conversion_dict)
 
 from jungle.agent import Agent
 
@@ -66,7 +66,9 @@ class JungleBase(ABC):
         self.white = "white"
         self.black = "black"
         #self.action_space = spaces.MultiDiscrete([2, 3, 2]) #original
-        self.action_space = spaces.MultiDiscrete([2, 3, 1]) #just testing!!!
+        agent_action_space = spaces.Discrete(12)
+        self.action_space = spaces.Tuple((agent_action_space,) * env_config.get('n_agents'))
+        
         
         # this is going to be a shared obs space
         self.observation_space = spaces.Tuple(
@@ -122,32 +124,38 @@ class JungleBase(ABC):
 
     #amending for homogenous action dist 
     def step(self,actions):
+        print('we reach step')
         if 'black' not in actions:
-            actions_black = [0, 0, 0]
+            actions_black = 3
         else:
             actions_black = actions[self.black]
 
         if 'white' not in actions:
-            actions_white = [0, 0, 0]
+            actions_white = 3
         else:
             actions_white = actions[self.white]
 
-        black_fwd = actions_black[0]
-        black_rot = actions_black[1] - 1
-        black_climb = actions_black[2]
+        _white_actions = action_conversion_dict.get(actions_white)
+        _black_actions = action_conversion_dict.get(actions_black)
+
+        black_fwd = _black_actions[0]
+        black_rot = _black_actions[1]
+        black_climb = _black_actions[2]
 
         black_dict = {Actions.FORWARD: black_fwd, Actions.ROTATE: black_rot, Actions.CLIMB: black_climb}
 
-        white_fwd = actions_white[0]
-        white_rot = actions_white[1] - 1
-        white_climb = actions_white[2]
+        white_fwd = _white_actions[0]
+        white_rot = _white_actions[1] 
+        white_climb = _white_actions[2]
 
         white_dict = {Actions.FORWARD: white_fwd, Actions.ROTATE: white_rot, Actions.CLIMB: white_climb}
 
         actions_dict = {self.white: white_dict,
                         self.black: black_dict}
 
-        obs, rewards, done = self.step_in_jungle(actions_dict)
+        obs, rewards, done, info = self.step_in_jungle(actions_dict)
+        print(obs)
+        return  obs,  rewards, done, info
 
     def step_in_jungle(self, actions):
 
@@ -253,6 +261,8 @@ class JungleBase(ABC):
             obs[self.agents[1]] = None
 
         obs = self.postprocess_obs_data(obs)
+        print('OBS in step')
+        print(obs)
 
         info = {"rewards": rewards}
         all_rewards = sum(rewards.values())
@@ -293,6 +303,12 @@ class JungleBase(ABC):
         obs = tuple(obs)
 
         return obs
+
+    def one_hot_obs(self, obs):
+        env_elements = len(ElementsEnv) + 1
+        one_hot_obs = np.eye(16)[obs]
+        one_hot_obs = list(one_hot_obs.flat)
+        return one_hot_obs
 
     def postprocess_dones(self,done):
         white_done = done[self.agents[0]]
@@ -501,6 +517,7 @@ class JungleBase(ABC):
 
 
     def reset(self):
+        print("we reach reset")
 
         # Reset grid to initial state
         self.grid_env[:] = deepcopy(self._initial_grid)

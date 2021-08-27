@@ -59,6 +59,8 @@ class JungleBase(ABC):
         self._initial_grid = deepcopy(self.grid_env)
 
         self.agents = [Agent(i,range_observation = 4)  for i in range(env_config.get('n_agents'))]
+        print(len(self.agents))
+        
 
         self._place_agents(random_position=True)
         self._assign_colors()
@@ -154,7 +156,7 @@ class JungleBase(ABC):
                         self.black: black_dict}
 
         obs, rewards, done, info = self.step_in_jungle(actions_dict)
-        print(obs)
+        
         return  obs,  rewards, done, info
 
     def step_in_jungle(self, actions):

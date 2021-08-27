@@ -39,7 +39,8 @@ class BlumenModel(TorchModelV2, nn.Module):
         self.value_state_encoder_cnn_out_features = value_state_encoder_cnn_out_features
         self.share_observations = share_observations
 
-        self.n_agents = len(obs_space.original_space["agents"])
+        self.n_agents = len(obs_space.original_space["agents"]) #his 
+        
         self.outputs_per_agent = int(num_outputs / self.n_agents)
 
         obs_shape = obs_space.original_space["agents"][0].shape

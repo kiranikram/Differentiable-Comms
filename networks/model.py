@@ -126,7 +126,7 @@ class Model(TorchModelV2, nn.Module):
         
         #batch_size = input_dict["obs"]["state"].shape[0] #BLUMENKAMPS
        
-        batch_size = 32 #MINE
+        batch_size = 1 #MINE
 
         #device = input_dict["obs"]["state"].device #BLUMENKAMPS
         device = "cpu" #MINE

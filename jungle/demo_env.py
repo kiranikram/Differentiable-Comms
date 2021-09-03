@@ -129,7 +129,10 @@ class DemoMultiAgentEnv(gym.Env, EzPickle):
         return self.step(reset_actions)[0]
 
     def step(self, actions):
+        print(actions)
+        
         self.timestep += 1
+        
 
         observations = [
             agent.step(action) for agent, action in zip(self.agents, actions)
@@ -152,11 +155,13 @@ class DemoMultiAgentEnv(gym.Env, EzPickle):
         done = all_reached_goal or max_timestep_reached
 
         global_state = np.zeros(self.cfg["world_shape"] + [2], dtype=np.uint8)
+   
         for agent in self.agents:
             global_state[int(agent.pose[Y]), int(agent.pose[X]), 0] = 1
             global_state[int(agent.goal[Y]), int(agent.goal[X]), 1] = 1
 
         obs = {"agents": tuple(observations), "state": global_state}
+        
         info = {"rewards": rewards}
         all_rewards = sum(rewards.values())
 

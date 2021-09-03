@@ -123,6 +123,8 @@ class Model(TorchModelV2, nn.Module):
 
     @override(ModelV2)
     def forward(self, input_dict, state, seq_lens):
+        print("INPUT DICT")
+        print(input_dict)
         
         #batch_size = input_dict["obs"]["state"].shape[0] #BLUMENKAMPS
        
@@ -136,6 +138,8 @@ class Model(TorchModelV2, nn.Module):
             batch_size, self.n_agents, self.encoder_out_features
         ).to(device)
 
+        
+
     
     
         value_feature_map = torch.zeros(
@@ -143,9 +147,17 @@ class Model(TorchModelV2, nn.Module):
         ).to(device)
         for i in range(self.n_agents):
             #agent_obs = input_dict["obs"]["agents"][i] #BLUMENKAMPS
+
+            print('AG OBS')
+          
      
             
             agent_obs = input_dict["obs"][i] #MINE
+            print("£££££££££££££££££")
+            print("£££££££££££££££££")
+            print(agent_obs.shape)
+            print("£££££££££££££££££")
+            print("£££££££££££££££££")
             
             action_feature_map[:, i] = self.action_encoder(agent_obs)
             

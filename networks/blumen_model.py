@@ -116,6 +116,7 @@ class BlumenModel(TorchModelV2, nn.Module):
 
     @override(ModelV2)
     def forward(self, input_dict, state, seq_lens):
+        print(input_dict)
         batch_size = input_dict["obs"]["state"].shape[0]
         device = input_dict["obs"]["state"].device
 
@@ -127,6 +128,8 @@ class BlumenModel(TorchModelV2, nn.Module):
         ).to(device)
         for i in range(self.n_agents):
             agent_obs = input_dict["obs"]["agents"][i]
+            print("SHAPE AGENT  OBS")
+            print(agent_obs.shape)
             action_feature_map[:, i] = self.action_encoder(agent_obs)
             value_feature_map[:, i] = self.value_encoder(agent_obs)
         value_state_features = self.value_encoder_state(

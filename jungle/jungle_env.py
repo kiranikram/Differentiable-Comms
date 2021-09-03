@@ -59,7 +59,7 @@ class JungleBase(ABC):
         self._initial_grid = deepcopy(self.grid_env)
 
         self.agents = [Agent(i,range_observation = 4)  for i in range(env_config.get('n_agents'))]
-        print(len(self.agents))
+        
         
 
         self._place_agents(random_position=True)
@@ -69,7 +69,7 @@ class JungleBase(ABC):
         self.black = "black"
         #self.action_space = spaces.MultiDiscrete([2, 3, 2]) #original
         agent_action_space = spaces.Discrete(12)
-        self.action_space = spaces.Tuple((agent_action_space,) * env_config.get('n_agents'))
+        self.action_space = spaces.Tuple((agent_action_space,) * 2)
         
         
         # this is going to be a shared obs space
@@ -126,6 +126,7 @@ class JungleBase(ABC):
 
     #amending for homogenous action dist 
     def step(self,actions):
+        print(actions)
         print('we reach step')
         if 'black' not in actions:
             actions_black = 3

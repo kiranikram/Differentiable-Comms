@@ -33,7 +33,7 @@ def train(share_observations=True, action_space="discrete", goal_shift=1):
         keep_checkpoints_num=1,
         local_dir="/tmp",
         # loggers=DEFAULT_LOGGERS + (WandbLogger,),
-        stop={"training_iteration": 3},
+        stop={"training_iteration": 1},
         config={
             "framework": "torch",
             "env": "demo_env",
@@ -97,17 +97,17 @@ if __name__ == "__main__":
         action="store_true",
         help="Do not instantiate shared central NN for sharing information",
     )
-    parser.add_argument(
-        "--goal_shift",
-        type=int,
-        default=1,
-        choices=range(0, 2),
-        help="Goal shift offset (0 means that each agent moves to its own goal, 1 to its neighbor, etc.)",
-    )
+    #parser.add_argument(
+        #"--goal_shift",
+        #type=int,
+        #default=1,
+        #choices=range(0, 2),
+        #help="Goal shift offset (0 means that each agent moves to its own goal, 1 to its neighbor, etc.)",
+    #)
 
     args = parser.parse_args()
     train(
         share_observations=not args.disable_sharing,
         action_space=args.action_space,
-        goal_shift=args.goal_shift,
+        #goal_shift=args.goal_shift,
     )

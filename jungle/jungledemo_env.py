@@ -53,6 +53,7 @@ class JungleDemoEnv(gym.Env, EzPickle):
         observations = [
             agent.step(action) for agent, action in zip(self.agents, actions)
         ]
+        #take  out agent class
 
         rewards = {}
         # shift each agent's goal so that the shared NN has to be used to solve the problem

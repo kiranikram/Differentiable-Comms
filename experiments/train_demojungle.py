@@ -11,6 +11,7 @@ from ray.tune.logger import pretty_print, DEFAULT_LOGGERS, TBXLogger
 # from ray.tune.integration.wandb import WandbLogger
 
 from jungle.demo_env import DemoMultiAgentEnv
+from jungle.various_envs import EasyExit
 from networks.model import Model
 from networks.blumen_model import BlumenModel
 from ray.rllib.models import ModelCatalog
@@ -21,7 +22,7 @@ from networks.multi_action_dist import TorchHomogeneousMultiActionDistribution
 def train(share_observations=True, action_space="discrete", goal_shift=1):
     ray.init()
 
-    register_env("demo_env", lambda config: DemoMultiAgentEnv(config))
+    register_env("demo_env", lambda config: EasyExit(config))
     ModelCatalog.register_custom_model("model", BlumenModel)
     ModelCatalog.register_custom_action_dist(
         "hom_multi_action", TorchHomogeneousMultiActionDistribution
@@ -69,12 +70,13 @@ def train(share_observations=True, action_space="discrete", goal_shift=1):
                     "api_key_file": "./wandb_api_key_file",
                 }
             },
+           
             "env_config": {
-                "world_shape": [5, 5],
+                "grid_size": 11,
                 "n_agents": 2,
-                "max_episode_len": 10,
-                "action_space": action_space,
-                "goal_shift": goal_shift,
+                #"max_episode_len": 10,
+                #"action_space": action_space,
+                #"goal_shift": goal_shift,
             },
         },
     )
@@ -84,14 +86,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="RLLib multi-agent with shared NN demo."
     )
-    parser.add_argument(
-        "--action_space",
-        default="discrete",
-        const="discrete",
-        nargs="?",
-        choices=["continuous", "discrete"],
-        help="Train with continuous or discrete action space",
-    )
+    
     parser.add_argument(
         "--disable_sharing",
         action="store_true",
@@ -108,6 +103,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     train(
         share_observations=not args.disable_sharing,
-        action_space=args.action_space,
+        #action_space=args.action_space,
         #goal_shift=args.goal_shift,
     )

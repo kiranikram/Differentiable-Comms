@@ -44,6 +44,11 @@ class BlumenModel(TorchModelV2, nn.Module):
         self.outputs_per_agent = int(num_outputs / self.n_agents)
 
         obs_shape = obs_space.original_space["agents"][0].shape
+
+        print('orig obs shape')
+        print(obs_shape)
+        print('obs shape[0]')
+        print(obs_shape[0])
         state_shape = obs_space.original_space["state"].shape
 
         ###########
@@ -118,11 +123,19 @@ class BlumenModel(TorchModelV2, nn.Module):
     def forward(self, input_dict, state, seq_lens):
         print(input_dict)
         batch_size = input_dict["obs"]["state"].shape[0]
+        print('BATCH SIZE')
+        print(batch_size)
+        #batch_size = 1
         device = input_dict["obs"]["state"].device
+        #device = "cpu"
 
         action_feature_map = torch.zeros(
             batch_size, self.n_agents, self.encoder_out_features
         ).to(device)
+
+        print('action feature map shape ')
+
+        print(action_feature_map.shape)
         value_feature_map = torch.zeros(
             batch_size, self.n_agents, self.encoder_out_features
         ).to(device)

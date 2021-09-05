@@ -2,11 +2,12 @@ import sys, os
 sys.path.append(".")
 sys.path.append("..")
 from jungle.jungle_env import JungleBase
+from jungle.jungledemo_env import JungleDemoEnv
 from jungle.utils import ElementsEnv
 from copy import deepcopy
 import gym
 
-class EasyExit(JungleBase, gym.Env):
+class EasyExit(JungleDemoEnv, gym.Env):
 
     
 

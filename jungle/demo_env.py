@@ -129,7 +129,7 @@ class DemoMultiAgentEnv(gym.Env, EzPickle):
         return self.step(reset_actions)[0]
 
     def step(self, actions):
-        print(actions)
+        
         
         self.timestep += 1
         
@@ -137,6 +137,9 @@ class DemoMultiAgentEnv(gym.Env, EzPickle):
         observations = [
             agent.step(action) for agent, action in zip(self.agents, actions)
         ]
+        print('observatiosn')
+        print(observations)
+        print(type(observations[0]))
 
         rewards = {}
         # shift each agent's goal so that the shared NN has to be used to solve the problem

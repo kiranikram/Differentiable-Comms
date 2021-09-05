@@ -33,7 +33,7 @@ def train(share_observations=True, action_space="discrete", goal_shift=1):
         keep_checkpoints_num=1,
         local_dir="/tmp",
         # loggers=DEFAULT_LOGGERS + (WandbLogger,),
-        stop={"training_iteration": 3},
+        stop={"training_iteration": 1},
         config={
             "framework": "torch",
             "env": "demo_env",

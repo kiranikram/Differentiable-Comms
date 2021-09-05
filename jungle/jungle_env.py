@@ -47,14 +47,11 @@ class JungleBase(ABC):
 
         # Set borders of environment
         self._set_boundaries()
-
         # Set elements
         self._set_elements()
-
         # Set Exits
         self._calculate_exit_coordinates()
         self._set_exits()
-
         # Save the initial grid to reset to original state
         self._initial_grid = deepcopy(self.grid_env)
 
@@ -287,6 +284,7 @@ class JungleBase(ABC):
             white_oae = [white['other_agent_angle'] / self.size]
             white_color = [white['color'] / self.size]
             white_obs = white_vis + white_oae + white_color
+            white_obs = numpy.array(white_obs)
 
         else:
             white_obs = np.zeros(258)  # should be length of obs
@@ -297,13 +295,14 @@ class JungleBase(ABC):
             black_oae = [black['other_agent_angle'] / self.size]
             black_color = [black['color'] / self.size]
             black_obs = black_vis + black_oae + black_color
+            black_obs = numpy.array(black_obs)
             
         else:
             black_obs = np.zeros(258)
 
         # here  we  are  converting it to DEMO ENV  format  
         obs = [white_obs,black_obs]
-        obs = tuple(obs)
+        #obs = tuple(obs)
 
         return obs
 

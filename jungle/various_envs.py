@@ -20,6 +20,8 @@ class EasyExit(JungleDemoEnv, gym.Env):
         pass
 
     def reset(self):
+
+        self.agents = self.possible_agents[:]
         print("well we get  here ")
         self.grid_env[:] = deepcopy(self._initial_grid)
 

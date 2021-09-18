@@ -55,8 +55,9 @@ class JungleBase(ABC):
         # Save the initial grid to reset to original state
         self._initial_grid = deepcopy(self.grid_env)
 
-        self.agents = [Agent(i,range_observation = 4)  for i in range(env_config.get('n_agents'))]
-        
+        #self.agents = [Agent(i,range_observation = 4)  for i in range(env_config.get('n_agents'))]
+            #discount=self._discounts,
+        self.possible_agents = ["player_" + str(r) for r in range(2)]
         
 
         self._place_agents(random_position=True)
@@ -64,21 +65,7 @@ class JungleBase(ABC):
         #these are only instantiated because  we have a funky way of referncing actions - can we get rid of that altogether - lmaybe not now 
         self.white = "white"
         self.black = "black"
-        #self.action_space = spaces.MultiDiscrete([2, 3, 2]) #original
-        agent_action_space = spaces.Discrete(12)
-        self.action_space = spaces.Tuple((agent_action_space,) * 2)
-        
-        
-        # this is going to be a shared obs space
-        self.observation_space = spaces.Tuple(
-                    (
-                            spaces.Box(
-                            low=-1,
-                            high=1,
-                            shape=(258,),
-                        ),
-                    )
-                    * env_config.get("n_agents"))
+       
 
     
     

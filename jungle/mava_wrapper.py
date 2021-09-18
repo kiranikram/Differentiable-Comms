@@ -8,8 +8,8 @@ import dm_env
 #import gym
 import numpy as np
 
-# from acme import specs
-# from acme.wrappers.gym_wrapper import _convert_to_spec
+from acme import specs
+from acme.wrappers.gym_wrapper import _convert_to_spec
 
 
 from mava import types
@@ -55,6 +55,7 @@ class MavaJungleWrapper(JungleBase):
     # TODO remember this also takes in observe from jungle 
     # _convert_observations takes in a dict of type string: np array ;
     # so I ahve to make sure my dict has the agent string and obs are a numpy array 
+    # should be okay, just check it 
 
         observations = self._convert_observations(
             observe, {agent: False for agent in self.possible_agents}
@@ -149,6 +150,116 @@ class MavaJungleWrapper(JungleBase):
             self.env_done(),
             self.possible_agents,
         )
+
+    def observation_spec(self) -> types.Observation:
+        """Observation spec.
+        Returns:
+            types.Observation: spec for environment.
+        """
+        observation_specs = {}
+        for agent in self.possible_agents:
+            observation_specs[agent] = types.OLT(
+                observation=_convert_to_spec(
+                    self._environment.observation_spaces[agent]
+                ),
+                legal_actions=_convert_to_spec(self._environment.action_spaces[agent]),
+                terminal=specs.Array((1,), np.float32),
+            )
+        return observation_specs
+
+    def action_spec(self) -> Dict[str, Union[specs.DiscreteArray, specs.BoundedArray]]:
+        """Action spec.
+        Returns:
+            Dict[str, Union[specs.DiscreteArray, specs.BoundedArray]]: spec for actions.
+        """
+        action_specs = {}
+        action_spaces = self._environment.action_spaces
+        for agent in self.possible_agents:
+            action_specs[agent] = _convert_to_spec(action_spaces[agent])
+        return action_specs
+
+    def reward_spec(self) -> Dict[str, specs.Array]:
+        """Reward spec.
+        Returns:
+            Dict[str, specs.Array]: spec for rewards.
+        """
+        reward_specs = {}
+        for agent in self.possible_agents:
+            reward_specs[agent] = specs.Array((), np.float32)
+
+        return reward_specs
+
+    def discount_spec(self) -> Dict[str, specs.BoundedArray]:
+        """Discount spec.
+        Returns:
+            Dict[str, specs.BoundedArray]: spec for discounts.
+        """
+        discount_specs = {}
+        for agent in self.possible_agents:
+            discount_specs[agent] = specs.BoundedArray(
+                (), np.float32, minimum=0, maximum=1.0
+            )
+        return discount_specs
+
+    def extra_spec(self) -> Dict[str, specs.BoundedArray]:
+        """Extra data spec.
+        Returns:
+            Dict[str, specs.BoundedArray]: spec for extra data.
+        """
+        return {}
+
+    #TODO we dont have this abiliti (to see if agents are alive -- need to see how to implement it )
+    @property
+    def agents(self) -> List:
+        """Agents still alive in env (not done).
+        Returns:
+            List: alive agents in env.
+        """
+        return self._environment.agents
+
+    @property
+    def possible_agents(self) -> List:
+        """All possible agents in env.
+        Returns:
+            List: all possible agents in env.
+        """
+        return self._environment.possible_agents
+
+    @property
+    def environment(self) -> JungleBase:
+        """Returns the wrapped environment.
+        Returns:
+            ParallelEnv: parallel env.
+        """
+        return self._environment
+
+    @property
+    def current_agent(self) -> Any:
+        """Current active agent.
+        Returns:
+            Any: current agent.
+        """
+        return self._environment.agent_selection
+
+    def __getattr__(self, name: str) -> Any:
+        """Expose any other attributes of the underlying environment.
+        Args:
+            name (str): attribute.
+        Returns:
+            Any: return attribute from env or underlying env.
+        """
+        if hasattr(self.__class__, name):
+            return self.__getattribute__(name)
+        else:
+            return getattr(self._environment, name
+
+    
+
+    
+
+    
+
+    
 
 
 

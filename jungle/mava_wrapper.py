@@ -55,7 +55,9 @@ class MavaJungleWrapper(JungleBase):
     # TODO remember this also takes in observe from jungle 
     # _convert_observations takes in a dict of type string: np array ;
     # so I ahve to make sure my dict has the agent string and obs are a numpy array 
-    # should be okay, just check it 
+    # done in jungle_env in postprocess_obs
+
+    #confirmed - self.agents is a dict ## this is initialized in various_envs.py
 
         observations = self._convert_observations(
             observe, {agent: False for agent in self.possible_agents}

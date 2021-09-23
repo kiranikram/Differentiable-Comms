@@ -288,8 +288,9 @@ class JungleBase(ABC):
             black_obs = np.zeros(258)
 
         # here  we  are  converting it to DEMO ENV  format  
-        obs = [white_obs,black_obs]
+        #obs = [white_obs,black_obs]
         #obs = tuple(obs)
+        obs = {self.agents[0]:white_obs, self.agents[1]:black_obs}
 
         return obs
 
